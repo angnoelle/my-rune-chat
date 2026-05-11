@@ -23,9 +23,15 @@ export default function Chat() {
         body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
 
-      const data = await response.json();
-      const assistantMessage = { role: 'assistant', content: data.text };
-      setMessages(prev => [...prev, assistantMessage]);
+const data = await response.json();
+if (data.error) {
+  console.error('API Error:', data.error);
+  const errorMessage = { role: 'assistant', content: `Error: ${data.error}` };
+  setMessages(prev => [...prev, errorMessage]);
+} else {
+  const assistantMessage = { role: 'assistant', content: data.text };
+  setMessages(prev => [...prev, assistantMessage]);
+}
     } catch (error) {
       console.error('Error:', error);
     } finally {
